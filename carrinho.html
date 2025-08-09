@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho | Raven Studio</title>
+        <link rel="icon" href="/img/raven.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Bebas+Neue&family=Teko:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+    <meta name="description" content="Carrinho de compras - Raven Studio">
+
+    <style>
+        /* Adicione no início do seu CSS */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+}
+
+/* Estilo para os links da navbar do carrinho */
+.nav-menu .nav-link {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-family: 'Teko', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    position: relative;
+    white-space: nowrap;
+}
+
+/* Efeito hover igual ao da navbar principal */
+.nav-menu .nav-link:hover {
+    color: #9cef00;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+/* Sublinhado animado igual ao da navbar principal */
+.nav-menu .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #9cef00;
+    transition: all 0.3s ease;
+}
+
+.nav-menu .nav-link:hover::after {
+    width: 70%;
+}
+
+/* Estilo para o link ativo */
+.nav-menu .nav-link.active {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+        /* Estilos para as mensagens de pontos */
+.points-info {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.points-total, .points-balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.points-total i {
+    color: #FFD700;
+}
+
+.points-balance i {
+    color: #3b82f6;
+}
+
+.points-total strong, .points-balance strong {
+    color: #FFD700;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem;
+}
+
+.points-warning {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.points-success {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Estilo para botão desativado */
+.checkout-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #6b7280 !important;
+}
+        /* Estilos para a informação de pontos */
+.points-info {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.points-total, .points-balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.points-total i {
+    color: #FFD700;
+}
+
+.points-balance i {
+    color: #3b82f6;
+}
+
+.points-total strong, .points-balance strong {
+    color: #FFD700;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem;
+}
+
+.not-enough-points {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Estilos para a opção de pagamento com pontos */
+.payment-options {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.3);
+    padding-top: 1.5rem;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"] {
+    margin-right: 1rem;
+    accent-color: #3b82f6;
+}
+
+.payment-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-grow: 1;
+}
+
+.payment-icon {
+    font-size: 1.5rem;
+}
+
+.payment-details {
+    flex-grow: 1;
+}
+
+.payment-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.payment-description {
+    font-size: 0.8rem;
+    color: #d1d5db;
+}
+
+.points-balance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.points-icon {
+    color: #FFD700;
+    font-size: 1.2rem;
+}
+
+.points-value {
+    font-family: 'Bebas Neue', cursive;
+    color: #FFD700;
+    font-size: 1.2rem;
+}
+
+.not-enough-points {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.points-discount {
+    color: #22c55e;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+        /* Estilos da Navbar (igual à página do usuário) */
+.navbar {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 0.5rem 1.5rem; /* Reduzi o padding vertical de 0.8rem para 0.5rem */
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 40px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 5px 30px rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    min-width: 60%;
+    max-width: 800px;
+    transition: all 0.3s ease;
+}
+
+
+
+        .nav-container {
+    display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+nav {
+    display: block;
+    unicode-bidi: isolate;
+}
+        .nav-brand {
+              display: flex
+;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    flex-shrink: 0;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .brand-text {
+                font-weight: bold;
+            font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: #3b82f6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #3b82f6;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+      /* Ajuste para os links da navbar */
+.nav-link {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-family: 'Teko', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.2rem; /* Reduzi o padding vertical de 0.5rem para 0.4rem */
+    border-radius: 20px;
+    position: relative;
+    white-space: nowrap;
+}
+
+        .nav-link:hover, .nav-link.active {
+            color: #3b82f6;
+        }
+
+        .nav-link i {
+            font-size: 0.7rem;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-icon {
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: #3b82f6;
+            transform: scale(1.1);
+        }
+
+        .cart-icon-container {
+            position: relative;
+        }
+
+/* Ajuste para o ícone do carrinho e avatar */
+.cart-icon {
+    margin-top: 5px; /* Reduzi de 10px para 5px */
+}
+
+        .cart-count {
+       position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    font-family: 'Teko', sans-serif;
+    text-decoration: none;
+        }
+
+        .profile-avatar {
+               
+              cursor: pointer;
+         
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.2);
+            border: 2px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+            
+   margin-top: 17px; /* Reduzi de 17px para 10px */
+    width: 35px; /* Reduzi de 40px para 35px */
+    height: 35px; /* Reduzi de 40px para 35px */
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar .fas {
+            font-size: 1.2rem;
+            color: #3b82f6;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .cart-icon.added {
+            animation: pulse 0.5s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .navbar {
+                width: 95%;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+
+   @media (max-width: 768px) {
+    .navbar {
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        min-width: 100%;
+        border-radius: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 2px 20px rgba(59, 130, 246, 0.2);
+        border: none;
+        border-bottom: 1px solid #3b82f6;
+        padding: 0.4rem 0.4rem; /* Reduzi o padding vertical de 0.6rem para 0.4rem */
+        transition: none;
+    }
+    
+    .nav-menu {
+        top: 60px; /* Reduzi de 70px para 60px */
+        height: calc(100vh - 60px); /* Ajuste correspondente */
+    }
+
+
+            .nav-toggle {
+                display: block;
+            }
+
+
+            .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background:#9cef00;
+    transition: all 0.3s ease;
+}
+.nav-link:hover {
+    color:#9cef00;
+    background: rgba(34, 197, 94, 0.1);
+}
+.nav-menu {
+    display: flex
+;
+    align-items: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+
+}
+            .nav-menu {
+                position: fixed;
+                top: 90px;
+                left: -100%;
+                width: 30%;
+                height: calc(100vh - 70px);
+                background: rgb(0, 0, 0);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 2rem 0;
+                transition: all 0.5s ease;
+                z-index: 1000;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-link {
+             
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Resto do seu CSS permanece igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(ellipse at bottom, #0a0a0a 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .cart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #0a0a0a 0%, #000000 100%);
+            z-index: -2;
+        }
+
+        .cart-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .cart-main {
+            min-height: 100vh;
+            padding: 100px 2rem 2rem;
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cart-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .cart-header h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            color: #3b82f6;
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-header p {
+            color: #d1d5db;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 3rem;
+        }
+
+        .cart-items {
+            background: rgba(15, 15, 15, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .cart-items:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 0 -1rem;
+        }
+
+        .item-image {
+            width: 120px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item:hover .item-image img {
+            transform: scale(1.05);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .item-info h3 {
+            font-family: 'Teko', sans-serif;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .item-info p {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .item-price {
+            font-family: 'Bebas Neue', cursive;
+            color: #3b82f6;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+       .quantity-controls {
+            display: flex;
+            align-items: center;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            overflow: hidden;
+            height: 45px;
+        }
+
+     .qty-btn {
+            width: 40px;
+            height: 100%;
+            background: rgba(59, 130, 246, 0.1);
+            border: none;
+            color: #3b82f6;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .qty-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+
+         .qty-btn:active {
+            transform: scale(0.95);
+        }
+
+        .qty-input {
+            width: 50px;
+            height: 100%;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-left: 1px solid rgba(59, 130, 246, 0.3);
+            border-right: 1px solid rgba(59, 130, 246, 0.3);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            padding: 0;
+            -moz-appearance: textfield;
+        }
+
+  .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .qty-input:focus {
+            outline: none;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .remove-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            color: #ef4444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            transform: scale(1.05);
+        }
+
+        .cart-summary {
+            background: rgba(15, 15, 15, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .cart-summary:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .summary-title {
+            font-family: 'Bebas Neue', cursive;
+            color: #3b82f6;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .summary-row.total {
+            border-top: 1px solid rgba(59, 130, 246, 0.3);
+            padding-top: 1rem;
+            margin-top: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .summary-label {
+            color: #d1d5db;
+        }
+
+        .summary-value {
+            color: white;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.1rem;
+        }
+
+        .total .summary-value {
+            color: #3b82f6;
+            font-size: 1.6rem;
+        }
+
+        .coupon-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(30, 30, 30, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .coupon-section:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .coupon-title {
+            color: #3b82f6;
+            font-family: 'Teko', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .coupon-input {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .coupon-input input {
+            width: 100%;
+            flex-grow: 1;
+            padding: 0.8rem;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-input input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
+        .coupon-btn {
+            flex-shrink: 0;
+            white-space: nowrap;
+            padding: 0.8rem 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 8px;
+            color: #3b82f6;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .coupon-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .coupon-btn.applied {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .remove-coupon {
+            margin-top: 0.8rem;
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .remove-coupon:hover {
+            color: #dc2626;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
+            border: none;
+            border-radius: 15px;
+            color: #000;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .checkout-btn:hover {
+            background: #3b82f6;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
+        }
+
+        .continue-shopping {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 12px;
+            color: #3b82f6;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .continue-shopping:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .empty-cart {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 0;
+            background: rgba(15, 15, 15, 0.9);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .empty-cart i {
+            font-size: 4rem;
+            color: rgba(2, 67, 172, 0.81);
+            margin-bottom: 2rem;
+        }
+
+        .empty-cart h3 {
+            font-family: 'Bebas Neue', cursive;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart p {
+            color: #d1d5db;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .empty-cart-btn {
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 700;
+            font-family: 'Bebas Neue', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .empty-cart-btn:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+/* Substitua todo o bloco .notification existente por este */
+.notification {
+        position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #3b82f6, #22c55e);
+    color: #000;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem;
+    max-width: 350px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: notificationFadeIn 0.3s ease-out;
+    transform: translateY(0);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+@keyframes notificationFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes notificationFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+    .notification {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        max-width: calc(100% - 30px);
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Adjustments for smaller screens (tablets/larger phones) */
+        @media (max-width: 1024px) {
+            .cart-content {
+                grid-template-columns: 1fr 280px; /* Adjust summary width for tablet-like screens */
+                gap: 2rem;
+            }
+            .cart-summary {
+                padding: 1.5rem;
+                top: 80px; /* Adjust sticky position */
+            }
+            .summary-title {
+                font-size: 1.8rem;
+            }
+            .checkout-btn {
+                padding: 1.2rem;
+                font-size: 1.3rem;
+            }
+            .continue-shopping {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+            }
+            .cart-item {
+                grid-template-columns: 100px 1fr auto auto auto; /* Smaller image and info area */
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+            .item-image {
+                width: 100px;
+                height: 80px;
+            }
+            .item-info h3 {
+                font-size: 1.3rem;
+            }
+            .item-info p {
+                font-size: 0.8rem;
+            }
+            .item-price {
+                font-size: 1.3rem;
+            }
+            .quantity-controls {
+                height: 40px;
+            }
+            .qty-btn {
+                width: 35px;
+                font-size: 1rem;
+            }
+            .qty-input {
+                width: 45px;
+                font-size: 0.8rem;
+            }
+            .remove-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Mobile-specific adjustments for cart */
+        @media (max-width: 768px) {
+            .cart-main {
+                padding: 80px 0.5rem 0.5rem; /* Reduced padding for very small screens */
+            }
+            
+            .cart-header h1 {
+                font-size: 2rem; /* Smaller heading for mobile */
+            }
+            
+            .cart-header p {
+                font-size: 0.8rem; /* Smaller paragraph for mobile */
+            }
+
+            .cart-content {
+                grid-template-columns: 1fr 0.8fr; /* Adjusted to keep side-by-side, but summary is smaller */
+                gap: 0.8rem; /* Reduced gap for mobile */
+            }
+
+            .cart-items {
+                padding: 0.8rem; /* Reduced padding */
+            }
+
+            .cart-item {
+                grid-template-columns: 60px 1fr; /* Smaller image and information area */
+                gap: 0.5rem; /* Reduced gap */
+                padding: 0.8rem 0; /* Reduced padding */
+                align-items: flex-start; /* Align items to top */
+            }
+            
+            .item-image {
+                width: 60px; /* Smaller image width */
+                height: 50px; /* Smaller image height */
+                border-radius: 8px; /* Smaller border radius */
+            }
+
+            .item-info {
+                gap: 0.2rem; /* Even smaller gap */
+            }
+
+            .item-info h3 {
+                font-size: 0.9rem; /* Smaller item name */
+            }
+
+            .item-info p {
+                font-size: 0.6rem; /* Even smaller item description */
+            }
+
+            .points-container .points-value {
+                font-size: 0.7rem; /* Smaller points value */
+            }
+
+            .item-price {
+                font-size: 0.9rem; /* Smaller item price */
+            }
+
+            .quantity-controls {
+                height: 28px; /* Smaller quantity control height */
+                border-radius: 6px; /* Smaller border radius */
+                width: 60px; /* Make quantity controls smaller */
+            }
+
+            .qty-btn {
+                width: 20px; /* Smaller button width */
+                font-size: 0.7rem; /* Smaller button icon */
+            }
+
+            .qty-input {
+                width: 20px; /* Smaller input width */
+                font-size: 0.6rem; /* Smaller input font size */
+            }
+
+            .remove-btn {
+                width: 28px; /* Smaller remove button */
+                height: 28px; /* Smaller remove button */
+                font-size: 0.7rem; /* Smaller remove button icon */
+                border-radius: 6px; /* Smaller border radius */
+            }
+
+            .cart-summary {
+                padding: 0.8rem; /* Reduced padding */
+                border-radius: 10px; /* Smaller border radius */
+                top: 70px; /* Adjust sticky position for smaller screens */
+            }
+
+            .summary-title {
+                font-size: 1.2rem; /* Smaller summary title */
+                margin-bottom: 0.8rem; /* Reduced margin */
+            }
+
+            .summary-row {
+                font-size: 0.75rem; /* Smaller summary row font size */
+                margin-bottom: 0.4rem;
+            }
+
+            .summary-row.total {
+                font-size: 0.9rem; /* Smaller total font size */
+                padding-top: 0.6rem;
+                margin-top: 0.8rem;
+            }
+
+            .summary-value {
+                font-size: 0.75rem; /* Smaller summary value */
+            }
+
+            .total .summary-value {
+                font-size: 1.1rem; /* Smaller total value */
+            }
+
+            .coupon-section {
+                padding: 0.6rem; /* Reduced padding */
+                margin: 0.8rem 0; /* Reduced margin */
+                border-radius: 8px; /* Smaller border radius */
+            }
+
+            .coupon-title {
+                font-size: 0.8rem; /* Smaller coupon title */
+                margin-bottom: 0.5rem; /* Reduced margin */
+            }
+
+            .coupon-input input {
+                padding: 0.4rem; /* Smaller input padding */
+                font-size: 0.7rem; /* Smaller input font size */
+                border-radius: 5px; /* Smaller border radius */
+            }
+
+            .coupon-btn {
+                padding: 0.4rem 0.6rem; /* Smaller button padding */
+                font-size: 0.7rem; /* Smaller button font size */
+                border-radius: 5px; /* Smaller border radius */
+            }
+
+            .remove-coupon {
+                font-size: 0.6rem; /* Smaller remove coupon text */
+            }
+
+            .points-info {
+                margin: 0.6rem 0; /* Reduced margin */
+                padding: 0.5rem; /* Reduced padding */
+                border-radius: 6px; /* Smaller border radius */
+            }
+
+            .points-total strong, .points-balance strong {
+                font-size: 0.8rem; /* Smaller points text */
+            }
+
+            .points-warning, .points-success {
+                padding: 0.4rem; /* Reduced padding */
+                font-size: 0.7rem; /* Smaller warning/success text */
+                border-radius: 5px; /* Smaller border radius */
+            }
+
+            .checkout-btn {
+                padding: 0.8rem; /* Smaller checkout button padding */
+                font-size: 0.9rem; /* Smaller checkout button font size */
+                margin-top: 0.8rem; /* Reduced margin */
+                border-radius: 8px; /* Smaller border radius */
+            }
+
+            .continue-shopping {
+                padding: 0.6rem; /* Smaller continue shopping button padding */
+                font-size: 0.7rem; /* Smaller continue shopping button font size */
+                border-radius: 6px; /* Smaller border radius */
+            }
+
+            .empty-cart i {
+                font-size: 2rem; /* Smaller empty cart icon */
+                margin-bottom: 0.8rem; /* Reduced margin */
+            }
+
+            .empty-cart h3 {
+                font-size: 1.2rem; /* Smaller empty cart heading */
+            }
+
+            .empty-cart p {
+                font-size: 0.7rem; /* Smaller empty cart paragraph */
+            }
+
+            .empty-cart-btn {
+                padding: 0.8rem 1.5rem; /* Smaller empty cart button padding */
+                font-size: 0.8rem; /* Smaller empty cart button font size */
+                border-radius: 8px; /* Smaller border radius */
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar" role="navigation" aria-label="Menu principal">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/pages/home.html" class="brand-link">
+                    <img src="/img/logo.png" alt="Logo RAVEN" class="brand-logo">
+                    <span class="brand-text">RAVEN</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu" role="menubar">
+                <li role="none"><a href="/pages/home.html" role="menuitem" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+                <li role="none"><a href="/pages/loja.html" role="menuitem" class="nav-link"><i class="fas fa-store"></i> Loja</a></li>
+                <li role="none"><a href="/pages/artists.html" role="menuitem" class="nav-link"><i class="fas fa-star"></i> Artistas</a></li>
+                <li role="none"><a href="/pages/contato.html" role="menuitem" class="nav-link"><i class="fas fa-envelope"></i> Contato</a></li>
+                <li role="none"><a href="/pages/blog.html" role="menuitem" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+                <li role="none"><a href="/pages/game.html" role="menuitem" class="nav-link"><i class="fas fa-gamepad"></i>Game</a></li>
+                  <li role="nav-icons">  <a href="/pages/carrinho.html" class="nav-icon cart-icon-container" aria-label="Carrinho de compras">
+                    <i class="fas fa-shopping-cart cart-icon"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </a></li>
+            </ul>
+            <div class="nav-icons">
+              <div class="profile-avatar" id="user-avatar-nav" onclick="goToUserPage()">
+    <i class="fas fa-user" id="default-avatar-icon"></i>
+    <img id="avatar-img" style="display: none;">
+</div>
+              
+            </div>
+        </div>
+    </nav>
+
+    <div class="cart-bg"></div>
+    <div class="cart-particles" id="particles-js"></div>
+    
+    <main class="cart-main">
+        <header class="cart-header">
+            <h1>CARRINHO DE COMPRAS</h1>
+            <p>Revise seus itens antes de finalizar a compra</p>
+        </header>
+        
+        <div class="cart-content" id="cart-content">
+            </div>
+    </main>
+
+<footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-logo">
+                        <img src="/img/Logo.png" alt="Logo RAVEN" class="brand-logo" style="width: 50px; height: 50px;">
+                        <h3>RAVEN STUDIO</h3>
+                    </div>
+                    <p>Transformando pele em arte desde 2016. Cada tatuagem conta uma história única.</p>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/raven_studio__" class="social-icon" aria-label="Instagram do Raven Studio">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>LINKS RÁPIDOS</h4>
+                    <ul>
+                        <li><a href="/pages/artists.html">Artistas</a></li>
+                        <li><a href="/pages/agendamento.html">Agendamento</a></li>
+                        <li><a href="/pages/loja.html">Loja</a></li>
+                        <li><a href="/pages/blog.html">Blog</a></li>
+                        <li><a href="/pages/loja.html">Loja</a></li>
+                        <li><a href="/pages/contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>CONTATO</h4>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <span>Rua das Artes, 123<br>Vila Madalena - São Paulo, SP</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <span>(11) 99999-9999</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span>contato@ravenstudio.com</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-divider"></div>
+                <div class="footer-copyright">
+                    <p>© 2024 Raven Studio. Todos os direitos reservados.</p>
+                    <p class="footer-love">Feito com <i class="fas fa-heart" aria-hidden="true"></i> para amantes da arte corporal</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+// Função para verificar se o usuário está logado
+function checkUserLoggedIn() {
+    const user = JSON.parse(localStorage.getItem('ravenStudioCurrentUser'));
+    return user !== null;
+}
+
+// Função para mostrar mensagem de login
+function showLoginMessage() {
+    const cartContent = document.getElementById('cart-content');
+    if (cartContent) {
+        cartContent.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-user-lock"></i>
+                <h3>ACESSO RESTRITO</h3>
+                <p>Você precisa estar logado para visualizar e gerenciar seu carrinho de compras.</p>
+                <button class="empty-cart-btn" onclick="window.location.href='/pages/login.html'">
+                    <i class="fas fa-sign-in-alt"></i> FAZER LOGIN
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Função para carregar o avatar do usuário
+// Função para carregar o avatar do usuário
+function loadUserAvatar() {
+    const user = JSON.parse(localStorage.getItem('ravenStudioCurrentUser'));
+    const avatarImg = document.getElementById('avatar-img');
+    const defaultIcon = document.getElementById('default-avatar-icon');
+    const avatarContainer = document.getElementById('user-avatar-nav');
+
+    if (user && user.avatar) {
+        avatarImg.src = user.avatar;
+        avatarImg.style.display = 'block';
+        defaultIcon.style.display = 'none';
+    } else {
+        avatarImg.style.display = 'none';
+        defaultIcon.style.display = 'block';
+    }
+
+    // Adiciona o evento de clique para redirecionar
+    if (avatarContainer) {
+        avatarContainer.onclick = goToUserPage;
+    }
+}
+
+// Função para redirecionar para a página do usuário
+function goToUserPage() {
+    window.location.href = '/pages/user.html';
+}
+// Função para mostrar notificação
+// Função para mostrar notificação
+function showNotification(message, type = 'success') {
+    // Remove notificações existentes primeiro
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => {
+        notification.style.animation = 'notificationFadeOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    });
+
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i> 
+        <span>${message}</span>
+    `;
+    document.body.appendChild(notification);
+
+    // Configura o timeout para remover a notificação
+    const removeNotification = () => {
+        notification.style.animation = 'notificationFadeOut 0.3s ease-out';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    };
+
+    // Remove após 3 segundos
+    const timeoutId = setTimeout(removeNotification, 3000);
+
+    // Permite fechar a notificação clicando nela
+    notification.onclick = () => {
+        clearTimeout(timeoutId);
+        removeNotification();
+    };
+}
+
+// Função para atualizar o contador do carrinho
+function updateCartCounter() {
+    try {
+        const cart = JSON.parse(localStorage.getItem('ravenStudioCart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = totalItems;
+        }
+    } catch (e) {
+        console.error("Erro ao atualizar contador do carrinho:", e);
+    }
+}
+
+class ShoppingCart {
+    constructor() {
+        if (!checkUserLoggedIn()) {
+            showLoginMessage();
+            return;
+        }
+
+        this.cart = [];
+        this.coupons = {
+            'BEMVINDO10': { discount: 0.10, type: 'percentage' },
+            'BEMVINDO15': { discount: 0.15, type: 'percentage' },
+            'BEMVINDO20': { discount: 0.20, type: 'percentage' }
+        };
+        this.appliedCoupon = localStorage.getItem('ravenStudioAppliedCoupon') || null;
+        
+        this.loadCartFromDB();
+    }
+
+    loadCartFromDB() {
+        fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.cart = data.itens.map(item => ({
+                    id: item.produto_id,
+                    name: item.nome,
+                    price: parseFloat(item.preco),
+                    image: item.imagem,
+                    quantity: item.quantidade
+                }));
+                this.renderCart();
+                updateCartCounter();
+                loadUserAvatar();
+            } else {
+                showNotification('Erro ao carregar carrinho: ' + (data.message || ''), 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            showNotification('Erro ao conectar com o servidor', 'error');
+        });
+    }
+
+    renderCart() {
+        const container = document.getElementById('cart-content');
+        
+        if (this.cart.length === 0) {
+            container.innerHTML = `
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Seu carrinho está vazio</h3>
+                    <p>Adicione alguns produtos incríveis da nossa loja!</p>
+                    <button class="empty-cart-btn" onclick="window.location.href='loja.html'">
+                        <i class="fas fa-store"></i> CONTINUAR COMPRANDO
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        const cartItemsHtml = this.cart.map(item => `
+            <div class="cart-item" data-id="${item.id}">
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="item-info">
+                    <h3>${item.name}</h3>
+                    <p>Produto profissional para tatuagem</p>
+                    <div class="points-container">
+                        <i class="fas fa-coins points-icon"></i>
+                        <span class="points-value">${Math.floor(item.price)} pts</span>
+                    </div>
+                </div>
+                <div class="item-price">
+                    ${this.formatPrice(item.price)}
+                </div>
+                <div class="quantity-controls">
+                    <button class="qty-btn" onclick="cart.updateQuantity('${item.id}', ${item.quantity - 1})">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="qty-input" value="${item.quantity}" min="1" 
+                           onchange="cart.updateQuantity('${item.id}', this.value)">
+                    <button class="qty-btn" onclick="cart.updateQuantity('${item.id}', ${item.quantity + 1})">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <button class="remove-btn" onclick="cart.removeItem('${item.id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `).join('');
+
+        const subtotal = this.calculateSubtotal();
+        const discount = this.calculateDiscount(subtotal);
+        const total = subtotal - discount;
+        
+        // Carrega os pontos do usuário (apenas para exibição)
+        const user = JSON.parse(localStorage.getItem('ravenStudioCurrentUser')) || {};
+        const userPoints = user.points || 0;
+        const totalPoints = this.cart.reduce((sum, item) => sum + (Math.floor(item.price) * item.quantity), 0);
+
+        container.innerHTML = `
+            <div class="cart-items">
+                ${cartItemsHtml}
+            </div>
+            <div class="cart-summary">
+                <h2 class="summary-title">RESUMO DO PEDIDO</h2>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal (${this.cart.length} ${this.cart.length === 1 ? 'item' : 'itens'})</span>
+                    <span class="summary-value">${this.formatPrice(subtotal)}</span>
+                </div>
+                
+                ${discount > 0 ? `
+                    <div class="summary-row">
+                        <span class="summary-label">Desconto (${this.appliedCoupon})</span>
+                        <span class="summary-value" style="color: #22c55e;">-${this.formatPrice(discount)}</span>
+                    </div>
+                ` : ''}
+                
+                <div class="coupon-section">
+                    <div class="coupon-title">
+                        <i class="fas fa-ticket-alt"></i> CUPOM DE DESCONTO
+                    </div>
+                    <div class="coupon-input">
+                        <input type="text" id="coupon-input" placeholder="Digite seu cupom" 
+                               ${this.appliedCoupon ? `value="${this.appliedCoupon}" disabled` : ''}>
+                        <button class="coupon-btn ${this.appliedCoupon ? 'applied' : ''}" onclick="cart.applyCoupon()">
+                            ${this.appliedCoupon ? '<i class="fas fa-check"></i> APLICADO' : '<i class="fas fa-tag"></i> APLICAR'}
+                        </button>
+                    </div>
+                    ${this.appliedCoupon ? `
+                        <button class="remove-coupon" onclick="cart.removeCoupon()">
+                            <i class="fas fa-times"></i> Remover cupom
+                        </button>
+                    ` : ''}
+                </div>
+                
+                <div class="points-info">
+                    <div class="points-total">
+                        <i class="fas fa-coins"></i> Total em pontos: <strong>${totalPoints} pts</strong>
+                    </div>
+                    <div class="points-balance">
+                        <i class="fas fa-wallet"></i> Seus pontos: <strong>${userPoints} pts</strong>
+                    </div>
+                    ${userPoints < totalPoints ? `
+                        <div class="points-info-message">
+                            <i class="fas fa-info-circle"></i> Você pode usar seus pontos e complementar com outras formas de pagamento
+                        </div>
+                    ` : `
+                        <div class="points-success">
+                            <i class="fas fa-check-circle"></i> Você tem pontos suficientes para esta compra!
+                        </div>
+                    `}
+                </div>
+                
+                <div class="summary-row total">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value">${this.formatPrice(total)}</span>
+                </div>
+                
+                <button class="checkout-btn" id="checkout-btn" onclick="cart.goToCheckout()">
+                    <i class="fas fa-credit-card"></i> FINALIZAR COMPRA
+                </button>
+                
+                <button class="continue-shopping" onclick="window.location.href='loja.html'">
+                    <i class="fas fa-arrow-left"></i> Continuar Comprando
+                </button>
+            </div>
+        `;
+    }
+
+   updateQuantity(itemId, newQuantity) {
+    itemId = typeof itemId === 'string' ? parseInt(itemId) : itemId;
+    newQuantity = parseInt(newQuantity);
+    
+    if (newQuantity < 1) {
+        this.removeItem(itemId);
+        return;
+    }
+    
+    if (newQuantity > 99) {
+        this.showNotification('Quantidade máxima permitida é 99', 'error');
+        newQuantity = 99;
+    }
+
+    fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            produto_id: itemId,
+            quantidade: newQuantity
+        }),
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Atualizar carrinho local
+            const itemIndex = this.cart.findIndex(item => item.id === itemId);
+            if (itemIndex !== -1) {
+                this.cart[itemIndex].quantity = newQuantity;
+                this.renderCart();
+                updateCartCounter();
+                this.showNotification('Quantidade atualizada!');
+            }
+        } else {
+            this.showNotification(data.message || 'Erro ao atualizar quantidade', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        this.showNotification('Erro ao conectar com o servidor', 'error');
+    });
+}
+
+   removeItem(itemId) {
+    fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            produto_id: itemId
+        }),
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Atualizar carrinho local
+            this.cart = this.cart.filter(item => item.id !== itemId);
+            this.renderCart();
+            updateCartCounter();
+            this.showNotification('Item removido do carrinho!');
+        } else {
+            this.showNotification(data.message || 'Erro ao remover item', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        this.showNotification('Erro ao conectar com o servidor', 'error');
+    });
+}
+
+  applyCoupon() {
+    if (this.appliedCoupon) return;
+
+    const couponInput = document.getElementById('coupon-input');
+    const couponCode = couponInput.value.toUpperCase().trim();
+
+    if (this.coupons[couponCode]) {
+        this.appliedCoupon = couponCode;
+        localStorage.setItem('ravenStudioAppliedCoupon', couponCode);
+        this.renderCart();
+        this.showNotification(`Cupom ${couponCode} aplicado com sucesso!`);
+    } else {
+        this.showNotification('Cupom inválido', 'error'); // Mensagem simplificada
+    }
+}
+
+removeCoupon() {
+    this.appliedCoupon = null;
+    localStorage.removeItem('ravenStudioAppliedCoupon');
+    this.renderCart();
+    this.showNotification('Cupom removido');
+}
+
+    calculateSubtotal() {
+        return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }
+
+    calculateDiscount(subtotal) {
+        if (!this.appliedCoupon) return 0;
+
+        const coupon = this.coupons[this.appliedCoupon];
+        if (coupon.type === 'percentage') {
+            return Math.floor(subtotal * coupon.discount);
+        } else {
+            return coupon.discount;
+        }
+    }
+
+    formatPrice(price) {
+        return price.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2
+        });
+    }
+
+    saveCart() {
+        localStorage.setItem('ravenStudioCart', JSON.stringify(this.cart));
+    }
+
+    showNotification(message, type = 'success') {
+        showNotification(message, type);
+    }
+
+    goToCheckout() {
+        // Redireciona para a página de pagamento sem verificar pontos
+        window.location.href = 'pagamento.html';
+    }
+
+setupEventListeners() {
+    // Efeito de scroll na navbar
+    const navbar = document.getElementById('navbar');
+    if (navbar) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Garante que o estado correto seja aplicado ao carregar a página
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+
+    // Menu mobile
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
+            navToggle.setAttribute('aria-expanded', navMenu.classList.contains('active'));
+
+            // Controla o scroll do body para evitar rolagem do conteúdo de fundo
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            } else {
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+        });
+
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    navToggle.classList.remove('active');
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    }
+
+    // Melhorias de acessibilidade
+    this.enhanceAccessibility();
+}
+
+enhanceAccessibility() {
+    // Adicionar aria-labels para imagens sem texto alternativo
+    document.querySelectorAll('img:not([alt])').forEach(img => {
+        if (!img.getAttribute('alt') && !img.hasAttribute('aria-hidden')) {
+            const parentText = img.parentElement.textContent || img.parentElement.getAttribute('aria-label') || '';
+            img.setAttribute('alt', parentText.trim() || 'Imagem decorativa');
+        }
+    });
+
+    // Adicionar aria-labels para elementos interativos
+    document.querySelectorAll('button:not([aria-label]), a:not([aria-label])').forEach(el => {
+        const text = el.textContent.trim();
+        if (text && !el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) {
+            el.setAttribute('aria-label', text);
+        }
+    });
+}
+}
+// Adiciona link para pular para o conteúdo principal (acessibilidade)
+const skipLink = document.createElement('a');
+skipLink.href = '#content';
+skipLink.className = 'skip-link';
+skipLink.textContent = 'Pular para o conteúdo principal';
+document.body.insertBefore(skipLink, document.body.firstChild);
+
+// Adiciona ID ao conteúdo principal
+const mainContent = document.querySelector('main');
+if (mainContent) {
+    mainContent.id = 'content';
+}
+// Inicializar quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuração das partículas de fundo
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: "#3b82f6" },
+            shape: { type: "circle" },
+            opacity: { value: 0.3, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#3b82f6", opacity: 0.2, width: 1 },
+            move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: {
+                onhover: { enable: true, mode: "grab" },
+                onclick: { enable: true, mode: "push" }
+            }
+        }
+    });
+
+    // Verifica se o usuário está logado antes de inicializar o carrinho
+    if (checkUserLoggedIn()) {
+        window.cart = new ShoppingCart();
+    } else {
+        showLoginMessage();
+    }
+});
+
+// Função global para atualizar quantidade
+window.updateCartQuantity = function(itemId, change) {
+    if (!checkUserLoggedIn()) {
+        showLoginMessage();
+        return;
+    }
+    
+    const input = document.querySelector(`.cart-item[data-id="${itemId}"] .qty-input`);
+    if (input) {
+        const currentValue = parseInt(input.value);
+        const newValue = currentValue + change;
+        window.cart.updateQuantity(itemId, newValue);
+    }
+};
+    </script>
+</body>
+</html>
