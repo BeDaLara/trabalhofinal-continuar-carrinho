@@ -1554,7 +1554,7 @@ class ShoppingCart {
     }
 
     loadCartFromDB() {
-        fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+        fetch('http://localhost/trabalhofinal/finalmente/api/carrinho_api.php', {
             method: 'GET',
             credentials: 'include'
         })
@@ -1724,7 +1724,7 @@ class ShoppingCart {
         newQuantity = 99;
     }
 
-    fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+    fetch('http://localhost/trabalhofinal/finalmente/api/carrinho_api.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1757,7 +1757,7 @@ class ShoppingCart {
 }
 
    removeItem(itemId) {
-    fetch('http://127.0.0.1:5501/trabalhofinal/finalmente/api/carrinho_api.php', {
+    fetch('http://localhost/trabalhofinal/finalmente/api/carrinho_api.php', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
