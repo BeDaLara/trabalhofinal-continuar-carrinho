@@ -2120,11 +2120,12 @@ class Shop {
     }
 
     // Update cart count display
-    updateCartCount() {
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountElement.textContent = totalItems;
+     updateCartCounter() {
+        const total = this.cart.reduce((sum, item) => sum + item.quantity, 0);
+        // Atualiza o elemento HTML que mostra o contador
+        const cartCounter = document.querySelector('.cart-count');
+        if (cartCounter) {
+            cartCounter.textContent = total;
         }
     }
 
